@@ -11,67 +11,53 @@ import PasswordChangePage from './PasswordChangePage/PasswordChangePage';
 import HomePage from './HomePage/HomePage';
 import ProfilePage from './ProfilePage/ProfilePage';
 import * as routes from '../constants/routes';
+import withAuthentication from '../hocs/withAuthentication';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      authUser: null
-    };
-  }
-
-  componentDidMount() {
-    firebase.auth.onAuthStateChanged( authUser => {
-      if(authUser) {
-        this.setState({ authUser: authUser });
-      } else {
-        this.setState({ authUser: null });
-      }
-    });
-  }
-
-  render() {
-    return (
-      <div className="app">
-        <Router>
-          <div>
-            <NavBar authUser={this.state.authUser} />
-            <div className="container">
-              <Route
-                exact path={routes.LANDING}
-                component={() => <LandingPage />}
-              />
-              <Route
-                exact path={routes.SIGN_IN}
-                component={() => <SignInPage />}
-              />
-              <Route
-                exact path={routes.SIGN_UP}
-                component={() => <SignUpPage />}
-              />
-              <Route
-                exact path={routes.HOME}
-                component={() => <HomePage />}
-              />
-              <Route
-                exact path={routes.PROFILE}
-                component={() => <ProfilePage authUser={this.state.authUser} />}
-              />
-              <Route
-                exact path={routes.PW_FORGET}
-                component={() => <PasswordForgetPage />}
-              />
-              <Route
-                exact path={routes.PW_CHANGE}
-                component={() => <PasswordChangePage />}
-              />
-            </div>
+const App = () => {
+  return (
+    <div className="app">
+      <Router>
+        <div>
+          <NavBar />
+          <div className="container">
+            <Route
+              exact path={routes.LANDING}
+              component={() => <LandingPage />}
+            />
+            <Route
+              exact path={routes.SIGN_IN}
+              component={() => <SignInPage />}
+            />
+            <Route
+              exact path={routes.SIGN_UP}
+              component={() => <SignUpPage />}
+            />
+            <Route
+              exact path={routes.HOME}
+              component={() => <HomePage />}
+            />
+            <Route
+              exact path={routes.PROFILE}
+              component={() => <ProfilePage />}
+            />
+            <Route
+              exact path={routes.PW_FORGET}
+              component={() => <PasswordForgetPage />}
+            />
+            <Route
+              exact path={routes.PW_CHANGE}
+              component={() => <PasswordChangePage />}
+            />
           </div>
-        </Router>
-      </div>
-    );
-  }
+        </div>
+      </Router>
+    </div>
+  );
 }
 
-export default App;
+
+
+
+
+
+export default withAuthentication(App);

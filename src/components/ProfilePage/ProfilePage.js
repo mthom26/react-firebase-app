@@ -3,13 +3,21 @@ import UserForm from '../UserForm/UserForm';
 import * as routes from '../../constants/routes';
 import { auth } from '../../firebase/index';
 import { Link } from 'react-router-dom';
+import AuthUserContext from '../../contexts/AuthUserContext';
 
-const ProfilePage = (props) => {
+const ProfilePage = () => {
   return (
-    <div>
-      <h2>Welcome back {props.authUser.email}</h2>
-      <Link to={routes.PW_CHANGE}>Change Password.</Link>
-    </div>
+    <AuthUserContext>
+      {authUser => {
+        return (
+          <div>
+            <h2>Welcome back {authUser.email}</h2>
+            <Link to={routes.PW_CHANGE}>Change Password.</Link>
+          </div>
+        );
+      }}
+    </AuthUserContext>
+    
   );
 };
 
