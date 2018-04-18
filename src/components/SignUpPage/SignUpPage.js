@@ -1,13 +1,13 @@
 import React from 'react';
 import UserForm from '../UserForm/UserForm';
 import * as routes from '../../constants/routes';
-import { auth } from '../../firebase/index';
+import { auth, db } from '../../firebase/index';
 import { Link } from 'react-router-dom';
 
 const SignUpPage = (props) => {
 
   const formComponents = {
-    userName: false,
+    userName: true,
     email: true,
     password: true,
     passwordConfirm: true,
@@ -18,6 +18,7 @@ const SignUpPage = (props) => {
       <h2>SignUpPage</h2>
       <UserForm
         onSubmit={auth.doCreateUser}
+        onSubmitSecondary={db.doCreateUser}
         formComponents={formComponents}
         redirectTarget={routes.HOME}
       />
