@@ -1,9 +1,28 @@
 import React from 'react';
+import withAuthorization from '../../hocs/withAuthorization';
+import AuthUserContext from '../../contexts/AuthUserContext';
 
 const HomePage = () => {
   return (
-    <h2>HomePage</h2>
+    <AuthUserContext.Consumer>
+      {authUser => {
+        return (
+          <div>
+            <h2>HomePage</h2>
+            <p>Welcome back {authUser.email}</p>
+          </div>
+        );
+      }}
+    </AuthUserContext.Consumer>
   );
 };
 
-export default HomePage;
+const authCondition = (authUser) => {
+  if(authUser) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export default withAuthorization(authCondition)(HomePage);

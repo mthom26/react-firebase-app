@@ -4,6 +4,7 @@ import * as routes from '../../constants/routes';
 import { auth } from '../../firebase/index';
 import { Link } from 'react-router-dom';
 import AuthUserContext from '../../contexts/AuthUserContext';
+import withAuthorization from '../../hocs/withAuthorization';
 
 const ProfilePage = () => {
   return (
@@ -11,13 +12,13 @@ const ProfilePage = () => {
       {authUser => {
         return (
           <div>
-            <h2>Welcome back {authUser.email}</h2>
+            <h2>Profile Page for {authUser.email}</h2>
             <Link to={routes.PW_CHANGE}>Change Password.</Link>
           </div>
         );
       }}
     </AuthUserContext>
-    
+
   );
 };
 
