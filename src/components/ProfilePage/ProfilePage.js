@@ -22,4 +22,12 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+const authCondition = (authUser) => {
+  if(authUser) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export default withAuthorization(authCondition)(ProfilePage);
