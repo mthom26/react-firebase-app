@@ -2,21 +2,44 @@ import React from 'react';
 import UserForm from '../UserForm/UserForm';
 import * as routes from '../../constants/routes';
 import { auth } from '../../firebase/index';
+import { withRouter } from 'react-router-dom';
 
-const PasswordForgetPage = (props) => {
-  const formComponents = {
-    email: true
-  };
+class PasswordForgetPage extends React.Component {
+  constructor(props) {
+    super(props);
 
-  return (
-    <div>
-      <h2>PasswordForgetPage</h2>
-      <UserForm
-        onSubmit={auth.doPasswordReset}
-        formComponents={formComponents}
-      />
-    </div>
-  );
-};
+    this.state = {
+      formComponents: {
+        email: true
+      },
+      error: null
+    };
 
-export default PasswordForgetPage;
+    this.onPasswordChange = this.onPasswordChange.bind(this);
+  }
+
+  onPasswordForget = (data) => {
+    auth.doPasswordReset(data)
+      .then(() => {
+        console.log('Reset Password');
+      })
+      .catch( error => {
+        this.setState({ error: error })
+      });
+  }
+
+  render() {
+    return (
+      <div>
+        <h2>PasswordForgetPage</h2>
+        <UserForm
+          onSubmitAction={this.onPasswordForget}
+          formComponents={this.state.formComponents}
+        />
+      </div>
+    );
+  }
+
+}
+
+export default withRouter(PasswordForgetPage);

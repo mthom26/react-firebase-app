@@ -22,7 +22,6 @@ export const doSignOut = () => {
 
 // Password Reset
 export const doPasswordReset = (data) => {
-  console.log('Resetting Password');
   return auth.sendPasswordResetEmail(data.email);
 };
 

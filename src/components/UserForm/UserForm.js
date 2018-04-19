@@ -1,18 +1,12 @@
 /*---------------------------------------------------------/
     UserForm is dynamic, displaying inputs conditionally
-    depending on the formComponents prop. It can also be
-    passed an optional redirectTarget prop to redirect to
-    another route.
-
-    UPDATE: Need to pass secondary onSubmit function props
-    to the form (such as databse operations). Will deal
-    with this by checking in the UserForm onSubmit function
-    for these and respond appropriately. It may have been
-    easier to just use separate forms for each page :(
+    depending on the formComponents prop. It's values are
+    passed to the props.onSubmit function as an object. The
+    onSubmit function then can choose whatever values it
+    needs from the object.
 /---------------------------------------------------------*/
 
 import React from 'react';
-import { withRouter } from 'react-router-dom';
 
 const INITIAL_STATE = {
   userName: '',
@@ -27,8 +21,7 @@ class UserForm extends React.Component {
     super(props);
 
     this.state = {
-      ...INITIAL_STATE,
-      redirectTarget: props.redirectTarget || null
+      ...INITIAL_STATE
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -41,39 +34,8 @@ class UserForm extends React.Component {
   onSubmit = (event) => {
     event.preventDefault();
     const data = { ...this.state };
-
-    // Check for additional prop functions here
-    if(this.props.onSubmitSecondary) {
-      this.props.onSubmit(data)
-        .then(authUser => {
-          this.props.onSubmitSecondary(authUser.uid, this.state.userName, this.state.email)
-            .then(() => {
-              const redirect = this.state.redirectTarget;
-              this.setState(() => ({...INITIAL_STATE}));
-              if(redirect) {
-                this.props.history.push(redirect);
-              }
-            })
-            .catch( error => {
-              this.setState({error: error})
-            });
-        })
-        .catch( error => {
-          this.setState({error: error})
-        });
-    } else {
-      this.props.onSubmit(data)
-        .then(authUser => {
-          const redirect = this.state.redirectTarget;
-          this.setState(() => ({...INITIAL_STATE}));
-          if(redirect) {
-            this.props.history.push(redirect);
-          }
-        })
-        .catch( error => {
-          this.setState({error: error})
-        });
-    }
+    this.setState({ ...INITIAL_STATE });
+    this.props.onSubmitAction(data);
   }
 
   onUserNameChange = (event) => {
@@ -147,11 +109,11 @@ class UserForm extends React.Component {
           >
             Submit
           </button>
-          {error && <p>{error.message}</p>}
+
         </form>
       </div>
     );
   }
 }
 
-export default withRouter(UserForm);
+export default UserForm;

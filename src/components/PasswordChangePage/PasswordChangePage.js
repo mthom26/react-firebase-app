@@ -2,22 +2,46 @@ import React from 'react';
 import UserForm from '../UserForm/UserForm';
 import * as routes from '../../constants/routes';
 import { auth } from '../../firebase/index';
+import { withRouter } from 'react-router-dom';
 
-const PasswordChangePage = (props) => {
-  const formComponents = {
-    password: true,
-    passwordConfirm: true
-  };
+class PasswordChangePage extends React.Component {
 
-  return (
-    <div>
-      <h2>PasswordChangePage</h2>
-      <UserForm
-        onSubmit={auth.doPasswordUpdate}
-        formComponents={formComponents}
-      />
-    </div>
-  );
-};
+  constructor(props) {
+    super(props);
 
-export default PasswordChangePage;
+    this.state = {
+      formComponents: {
+        password: true,
+        passwordConfirm: true
+      },
+      error: null
+    };
+
+    this.onPasswordChange = this.onPasswordChange.bind(this);
+  }
+
+  onPasswordChange = (data) => {
+    auth.doPasswordUpdate(data)
+      .then(() => {
+        console.log('Changed Password');
+      })
+      .catch( error => {
+        this.setState({ error: error })
+      });
+  }
+
+  render() {
+    return (
+      <div>
+        <h2>PasswordChangePage</h2>
+        <UserForm
+          onSubmitAction={this.onPasswordChange}
+          formComponents={this.state.formComponents}
+        />
+      </div>
+    );
+  }
+
+}
+
+export default withRouter(PasswordChangePage);
